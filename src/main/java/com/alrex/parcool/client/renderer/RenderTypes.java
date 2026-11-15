@@ -1,26 +1,10 @@
 package com.alrex.parcool.client.renderer;
 
-import net.minecraft.client.renderer.rendertype.RenderSetup;
 import net.minecraft.client.renderer.rendertype.RenderType;
 
 public class RenderTypes {
-    public static final RenderType ZIPLINE_3D;
-    public static final RenderType ZIPLINE_2D;
-
-    static {
-        ZIPLINE_2D = RenderType.create(
-                "zipline2d",
-                RenderSetup.builder(RenderPipelines.ZIPLINE_2D)
-                        .useLightmap()
-                        .bufferSize(256)
-                        .createRenderSetup()
-        );
-        ZIPLINE_3D = RenderType.create(
-                "zipline3d",
-                RenderSetup.builder(RenderPipelines.ZIPLINE_2D)
-                        .useLightmap()
-                        .bufferSize(256)
-                        .createRenderSetup()
-        );
-    }
+    // ponytail: 26.2 rewrote the pipeline API; the old custom pipelines were copies of vanilla's leash,
+    // so reuse it. Add a custom pipeline back if 3D/2D rope needs different culling.
+    public static final RenderType ZIPLINE_3D = net.minecraft.client.renderer.rendertype.RenderTypes.leash();
+    public static final RenderType ZIPLINE_2D = ZIPLINE_3D;
 }

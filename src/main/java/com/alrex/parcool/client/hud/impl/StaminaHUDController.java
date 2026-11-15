@@ -8,7 +8,7 @@ import com.alrex.parcool.common.attachment.common.Parkourability;
 import com.alrex.parcool.config.ParCoolConfig;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
@@ -36,7 +36,7 @@ public class StaminaHUDController implements GuiLayer {
 	}
 
 	@Override
-	public void render(@Nonnull GuiGraphics graphics, @Nonnull DeltaTracker partialTick) {
+	public void render(@Nonnull GuiGraphicsExtractor graphics, @Nonnull DeltaTracker partialTick) {
 		var player = Minecraft.getInstance().player;
 		if (player == null) return;
 		if (!ParCoolConfig.Client.Booleans.ParCoolIsActive.get()) return;

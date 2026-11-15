@@ -8,7 +8,7 @@ import com.alrex.parcool.common.info.ClientSetting;
 import com.alrex.parcool.common.network.payload.ClientInformationPayload;
 import com.alrex.parcool.config.ParCoolConfig;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.player.LocalPlayer;
@@ -43,7 +43,7 @@ public class SettingActionLimitationScreen extends ParCoolSettingScreen {
     }
 
     @Override
-    public void renderContents(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, int topOffset, int bottomOffset) {
+    public void renderContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick, int topOffset, int bottomOffset) {
         final int offsetX = 40, headerHeight = (int) (font.lineHeight * 1.5f);
         int contentOffsetY = topOffset + headerHeight + 2;
         int permissionColumnWidth = font.width(Permission_Permitted) * 5;
@@ -51,8 +51,8 @@ public class SettingActionLimitationScreen extends ParCoolSettingScreen {
         int contentHeight = height - contentOffsetY - bottomOffset;
         viewableItemCount = contentHeight / Checkbox_Item_Height;
         int headerTextY = topOffset + headerHeight / 2 - font.lineHeight / 2 + 1;
-        graphics.drawString(font, Header_ActionName, offsetX + 5, headerTextY, color.getText());
-        graphics.drawCenteredString(font, Header_Limitation, offsetX + nameColumnWidth + permissionColumnWidth / 2, headerTextY, color.getText());
+        graphics.text(font, Header_ActionName, offsetX + 5, headerTextY, color.getText());
+        graphics.centeredText(font, Header_Limitation, offsetX + nameColumnWidth + permissionColumnWidth / 2, headerTextY, color.getText());
         for (Checkbox actionButton : actionButtons) {
             actionButton.setWidth(0);
         }
@@ -67,11 +67,11 @@ public class SettingActionLimitationScreen extends ParCoolSettingScreen {
             button.setY(contentOffsetY + Checkbox_Item_Height * i);
             button.setWidth(nameColumnWidth - 5);
             button.setHeight(Checkbox_Item_Height - 1);
-            button.render(graphics, mouseX, mouseY, partialTick);
+            button.extractRenderState(graphics, mouseX, mouseY, partialTick);
             graphics.fill(offsetX, button.getY() + button.getHeight(), width - offsetX, button.getY() + button.getHeight() + 1, color.getSubSeparator());
             int rowY = contentOffsetY + Checkbox_Item_Height * i + Checkbox_Item_Height / 2;
             boolean permitted = actionList[topIndex + i].serverLimitation.getAsBoolean();
-            graphics.drawCenteredString(
+            graphics.centeredText(
                     font,
                     permitted ? Permission_Permitted : Permission_Denied,
                     offsetX + nameColumnWidth + permissionColumnWidth / 2,

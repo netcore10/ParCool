@@ -5,7 +5,7 @@ import com.alrex.parcool.common.tags.BlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
-import net.minecraft.util.Tuple;
+import com.alrex.parcool.utilities.Tuple;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -477,7 +477,7 @@ public class WorldUtil {
 	}
 
     public static boolean isHideAbleBlock(BlockState blockState) {
-        return blockState.getTags().anyMatch(it -> it.equals(BlockTags.HIDE_ABLE));
+        return blockState.is(BlockTags.HIDE_ABLE);
     }
 
     private static boolean getHideAbleSpace$isHideAble(Level world, Block block, BlockPos pos) {

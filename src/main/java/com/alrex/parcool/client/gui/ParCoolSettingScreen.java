@@ -2,7 +2,7 @@ package com.alrex.parcool.client.gui;
 
 import com.alrex.parcool.common.info.ActionInfo;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -47,9 +47,9 @@ public abstract class ParCoolSettingScreen extends Screen {
 	private static final Component MenuTitle = Component.translatable("parcool.gui.title.setting");
 
 	@Override
-	public void render(@Nonnull GuiGraphics graphics, int mouseX, int mouseY, float p_230430_4_) {
-		super.render(graphics, mouseX, mouseY, p_230430_4_);
-		renderBackground(graphics, mouseX, mouseY, p_230430_4_);
+	public void extractRenderState(@Nonnull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float p_230430_4_) {
+		super.extractRenderState(graphics, mouseX, mouseY, p_230430_4_);
+		extractBackground(graphics, mouseX, mouseY, p_230430_4_);
 		int topBarHeight = font.lineHeight * 2;
         int topBarItemWidth = (int) (1.2 * Arrays.stream(screenList).map(it -> font.width(it.title)).max(Integer::compareTo).orElse(0));
         int topBarOffsetX = width - topBarItemWidth * screenList.length;
@@ -63,7 +63,7 @@ public abstract class ParCoolSettingScreen extends Screen {
 			item.width = topBarItemWidth;
 			item.height = topBarHeight;
             boolean selected = currentScreen == i || item.isMouseIn(mouseX, mouseY);
-			graphics.drawCenteredString(
+			graphics.centeredText(
 					font, item.title,
 					topBarOffsetX + i * topBarItemWidth + topBarItemWidth / 2,
 					topBarHeight / 4 + 1,
@@ -77,7 +77,7 @@ public abstract class ParCoolSettingScreen extends Screen {
         if (!serverPermissionReceived.getAsBoolean()) {
 			graphics.fill(2, 2, topBarHeight - 3, topBarHeight - 3, 0xFFEEEEEE);
 			graphics.fill(3, 3, topBarHeight - 4, topBarHeight - 4, 0xFFEE0000);
-			graphics.drawCenteredString(font, "!", topBarHeight / 2, (topBarHeight - font.lineHeight) / 2 + 1, 0xEEEEEE);
+			graphics.centeredText(font, "!", topBarHeight / 2, (topBarHeight - font.lineHeight) / 2 + 1, 0xEEEEEE);
 			if (2 <= mouseX && mouseX < topBarHeight - 3 && 1 <= mouseY && mouseY < topBarHeight - 3) {
 				graphics.setTooltipForNextFrame(
 						font,
@@ -86,7 +86,7 @@ public abstract class ParCoolSettingScreen extends Screen {
 			}
 			titleOffset = topBarHeight;
 		}
-		graphics.drawString(
+		graphics.text(
 				font, MenuTitle,
 				titleOffset + 5,
 				topBarHeight / 4 + 1,
@@ -101,7 +101,7 @@ public abstract class ParCoolSettingScreen extends Screen {
     protected static final Component Permission_Denied = Component.literal("×");
     protected static final Component Permission_Not_Received = Component.literal("§4[Error] Permissions are not sent from a server.\n\nBy closing this setting menu, permissions will be sent again.\nIf it were not done, please report to the mod developer after checking whether ParCool is installed and re-login to the server.§r");
 
-    protected abstract void renderContents(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, int topOffset, int bottomOffset);
+    protected abstract void renderContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick, int topOffset, int bottomOffset);
 
     protected void save() {
     }
@@ -110,17 +110,17 @@ public abstract class ParCoolSettingScreen extends Screen {
         return false;
     }
 
-    private void renderSubHeaderAndFooter(GuiGraphics graphics, Component title, boolean scrollable, int topOffset) {
+    private void renderSubHeaderAndFooter(GuiGraphicsExtractor graphics, Component title, boolean scrollable, int topOffset) {
         int headerHeight = font.lineHeight * 2;
         graphics.fillGradient(0, topOffset, width, topOffset + headerHeight, color.getHeader1(), color.getHeader2());
         graphics.fillGradient(0, height - headerHeight, width, height, color.getHeader1(), color.getHeader2());
-        graphics.drawCenteredString(font, title, width / 2, topOffset + font.lineHeight / 2 + 2, color.getStrongText());
+        graphics.centeredText(font, title, width / 2, topOffset + font.lineHeight / 2 + 2, color.getStrongText());
         if (scrollable)
-			graphics.drawCenteredString(font, Component.literal("↓"), width / 2, height - font.lineHeight - font.lineHeight / 2, color.getStrongText());
+			graphics.centeredText(font, Component.literal("↓"), width / 2, height - font.lineHeight - font.lineHeight / 2, color.getStrongText());
 	}
 
 	@Override
-	public void renderBackground(@Nonnull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+	public void extractBackground(@Nonnull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		graphics.fill(0, 0, this.width, this.height, color.getBackground());
 	}
 
@@ -135,11 +135,11 @@ public abstract class ParCoolSettingScreen extends Screen {
 		switch (event.key()) {
 			case GLFW.GLFW_KEY_RIGHT:
                 save();
-                Minecraft.getInstance().setScreen(screenList[(currentScreen + 1) % screenList.length].screenSupplier.get());
+                Minecraft.getInstance().setScreenAndShow(screenList[(currentScreen + 1) % screenList.length].screenSupplier.get());
 				break;
 			case GLFW.GLFW_KEY_LEFT:
                 save();
-                Minecraft.getInstance().setScreen(screenList[(currentScreen - 1) % screenList.length].screenSupplier.get());
+                Minecraft.getInstance().setScreenAndShow(screenList[(currentScreen - 1) % screenList.length].screenSupplier.get());
 				break;
 			case GLFW.GLFW_KEY_UP:
 				mouseScrolled(0, 0, 1);
@@ -189,7 +189,7 @@ public abstract class ParCoolSettingScreen extends Screen {
         for (ScreenSet<?> modeSet : screenList) {
 			if (modeSet.isMouseIn((int) mouseEvent.x(), (int) mouseEvent.y()) && mouseEvent.input() == 0) {
                 save();
-                Minecraft.getInstance().setScreen(modeSet.screenSupplier.get());
+                Minecraft.getInstance().setScreenAndShow(modeSet.screenSupplier.get());
 				return true;
 			}
 		}

@@ -190,12 +190,12 @@ public class ActionProcessor {
                     if (trialCount < 5) {
                         parkourability.trySyncLimitation(localPlayer, parkourability);
                         if (ParCoolConfig.Client.Booleans.ShowAutoResynchronizationNotification.get()) {
-                            player.displayClientMessage(Component.translatable("parcool.message.error.limitation.not_synced"), false);
+                            player.sendSystemMessage(Component.translatable("parcool.message.error.limitation.not_synced"));
                         }
                         ParCool.LOGGER.warn("Detected ParCool Limitation is not synced. Sending synchronization request...");
                     } else if (trialCount == 5) {
                         parkourability.incrementSynchronizeTrialCount();
-                        player.displayClientMessage(Component.translatable("parcool.message.error.limitation.fail_sync").withStyle(ChatFormatting.DARK_RED), false);
+                        player.sendSystemMessage(Component.translatable("parcool.message.error.limitation.fail_sync").withStyle(ChatFormatting.DARK_RED));
                         ParCool.LOGGER.error("Failed to synchronize ParCool Limitation. There may be problems about server connection. Please report to the developer after checking connection");
                     }
                 }

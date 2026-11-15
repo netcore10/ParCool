@@ -9,7 +9,7 @@ import com.alrex.parcool.common.attachment.common.ReadonlyStamina;
 import com.alrex.parcool.config.ParCoolConfig;
 import com.alrex.parcool.utilities.MathUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
@@ -107,7 +107,7 @@ public class LightStaminaHUD {
 		oldValue = newValue;
 	}
 
-	public void render(GuiGraphics graphics, Parkourability parkourability, ReadonlyStamina stamina, float partialTick) {
+	public void render(GuiGraphicsExtractor graphics, Parkourability parkourability, ReadonlyStamina stamina, float partialTick) {
 		var player = Minecraft.getInstance().player;
 		if (player == null) return;
 		final boolean inexhaustible = player.hasEffect(Effects.INEXHAUSTIBLE);
@@ -128,7 +128,7 @@ public class LightStaminaHUD {
 		final int width = graphics.guiWidth();
 		final int height = graphics.guiHeight();
         int baseX = width / 2 + 91 + ParCoolConfig.Client.Integers.HorizontalOffsetOfLightStaminaHUD.get();
-		int baseY = height - Minecraft.getInstance().gui.rightHeight + ParCoolConfig.Client.Integers.VerticalOffsetOfLightStaminaHUD.get();
+		int baseY = height - 39 /* ponytail: vanilla rightHeight removed in 26.x, no stacking with air bubbles */ + ParCoolConfig.Client.Integers.VerticalOffsetOfLightStaminaHUD.get();
 		for (int i = 0; i < 10; i++) {
 			int x = baseX - i * 8 - 9;
 			int offsetY = 0;
@@ -174,6 +174,6 @@ public class LightStaminaHUD {
 
 			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, type.getTexture(size), 9, 9, 0, 0, x, baseY + offsetY, 9, 9);
 		}
-		Minecraft.getInstance().gui.rightHeight += 10;
+		
 	}
 }

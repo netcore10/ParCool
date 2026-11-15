@@ -26,7 +26,6 @@ public class CreativeTabs {
                 output.accept(Items.WOODEN_ZIPLINE_HOOK.get());
                 output.accept(Items.ZIPLINE_ROPE.get());
                 Arrays.stream(DyeColor.values())
-                        .map(DyeItem::byColor)
                         .map(dye -> {
                             var coloredRope = new ItemStack(Items.ZIPLINE_ROPE.get());
                             return DyedItemColor.applyDyes(coloredRope, Collections.singletonList(dye));
