@@ -128,7 +128,7 @@ public class LightStaminaHUD {
 		final int width = graphics.guiWidth();
 		final int height = graphics.guiHeight();
         int baseX = width / 2 + 91 + ParCoolConfig.Client.Integers.HorizontalOffsetOfLightStaminaHUD.get();
-		int baseY = height - 39 /* ponytail: vanilla rightHeight removed in 26.x, no stacking with air bubbles */ + ParCoolConfig.Client.Integers.VerticalOffsetOfLightStaminaHUD.get();
+		int baseY = height - Minecraft.getInstance().gui.hud.rightHeight + ParCoolConfig.Client.Integers.VerticalOffsetOfLightStaminaHUD.get();
 		for (int i = 0; i < 10; i++) {
 			int x = baseX - i * 8 - 9;
 			int offsetY = 0;
@@ -174,6 +174,6 @@ public class LightStaminaHUD {
 
 			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, type.getTexture(size), 9, 9, 0, 0, x, baseY + offsetY, 9, 9);
 		}
-		
+		Minecraft.getInstance().gui.hud.rightHeight += 10;
 	}
 }

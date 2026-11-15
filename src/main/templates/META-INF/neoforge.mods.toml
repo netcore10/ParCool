@@ -4,7 +4,7 @@ license = "LGPL-3.0"
 issueTrackerURL = "https://github.com/alRex-U/ParCool/issues" #optional
 [[mods]] #mandatory
 modId = "parcool" #mandatory
-version = "${file.jarVersion}" #mandatory
+version = "${mod_version}" #mandatory
 displayName = "ParCool!" #mandatory
 displayURL = "https://www.curseforge.com/minecraft/mc-mods/parcool" #optional
 logoFile = "../parcool_logo.png" #optional
@@ -25,7 +25,7 @@ file = "META-INF/accesstransformer.cfg"
 [[dependencies.parcool]] #optional
 modId = "neoforge" #mandatory
 type = "required"
-versionRange = "${neo_forge_version}" #mandatory
+versionRange = "${neo_version_range}" #mandatory
 # BEFORE - This mod is loaded BEFORE the dependency
 # AFTER - This mod is loaded AFTER the dependency
 ordering = "NONE"

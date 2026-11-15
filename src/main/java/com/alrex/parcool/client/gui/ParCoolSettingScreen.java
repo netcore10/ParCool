@@ -135,11 +135,11 @@ public abstract class ParCoolSettingScreen extends Screen {
 		switch (event.key()) {
 			case GLFW.GLFW_KEY_RIGHT:
                 save();
-                Minecraft.getInstance().setScreenAndShow(screenList[(currentScreen + 1) % screenList.length].screenSupplier.get());
+                Minecraft.getInstance().gui.setScreen(screenList[(currentScreen + 1) % screenList.length].screenSupplier.get());
 				break;
 			case GLFW.GLFW_KEY_LEFT:
                 save();
-                Minecraft.getInstance().setScreenAndShow(screenList[(currentScreen - 1) % screenList.length].screenSupplier.get());
+                Minecraft.getInstance().gui.setScreen(screenList[(currentScreen - 1) % screenList.length].screenSupplier.get());
 				break;
 			case GLFW.GLFW_KEY_UP:
 				mouseScrolled(0, 0, 1);
@@ -189,7 +189,7 @@ public abstract class ParCoolSettingScreen extends Screen {
         for (ScreenSet<?> modeSet : screenList) {
 			if (modeSet.isMouseIn((int) mouseEvent.x(), (int) mouseEvent.y()) && mouseEvent.input() == 0) {
                 save();
-                Minecraft.getInstance().setScreenAndShow(modeSet.screenSupplier.get());
+                Minecraft.getInstance().gui.setScreen(modeSet.screenSupplier.get());
 				return true;
 			}
 		}

@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:crafting_dye",
+  "dye": "#minecraft:dyes",
+  "result": {
+    "id": "parcool:zipline_rope"
+  },
+  "target": "parcool:zipline_rope"
+}
