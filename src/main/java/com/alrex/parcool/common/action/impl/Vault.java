@@ -38,9 +38,20 @@ public class Vault extends Action {
 		return currentAnimation;
 	}
 
+	// Vanilla cancels sprinting on a head-on wall bump, which happens the moment you clip a step at an angle.
+	// Keep vault available briefly after running stops so turning into the step still vaults.
+	private static final int RUNNING_GRACE_TICKS = 20; // about 1s: long enough to turn the camera onto the step
+	private int lastRunningTick = Integer.MIN_VALUE / 2;
+
+	private boolean recentlyRunning(Player player) {
+		return player.tickCount - lastRunningTick <= RUNNING_GRACE_TICKS;
+	}
+
 	//@OnlyIn(Dist.CLIENT)
 	@Override
 	public boolean canStart(Player player, Parkourability parkourability, ByteBuffer startInfo) {
+		// Track before any early return, so a failed angled approach still counts as "was running"
+		if (parkourability.get(FastRun.class).canActWithRunning(player)) lastRunningTick = player.tickCount;
 		Vec3 lookVec = player.getLookAngle();
 		lookVec = new Vec3(lookVec.x(), 0, lookVec.z()).normalize();
 		Vec3 step = WorldUtil.getVaultableStep(player);
@@ -52,7 +63,7 @@ public class Vault extends Action {
 						lookVec.x() * step.x() + lookVec.z() * step.z(), 0,
 						-lookVec.x() * step.z() + lookVec.z() * step.x()
 				).normalize();
-		if (dividedVec.x() < 0.707106) {
+		if (dividedVec.x() < 0.5) { // within 60 degrees of facing the step (was 45)
 			return false;
 		}
 		AnimationType animationType;
@@ -81,7 +92,7 @@ public class Vault extends Action {
 
 		return (!(ParCoolConfig.Client.Booleans.VaultKeyPressedNeeded.get() && !KeyBindings.getKeyVault().isDown())
 				&& !player.isInWater()
-				&& parkourability.get(FastRun.class).canActWithRunning(player)
+				&& recentlyRunning(player)
 				&& (player.onGround() || ParCoolConfig.Client.Booleans.EnableVaultInAir.get())
 				&& wallHeight > player.getBbHeight() * 0.44 /*about 0.8*/
 		);
@@ -145,6 +156,8 @@ public class Vault extends Action {
 	//@OnlyIn(Dist.CLIENT)
 	@Override
 	public void onWorkingTickInLocalClient(Player player, Parkourability parkourability) {
+		// A vault counts as running, so chained vaults (staircases) keep the grace window open
+		lastRunningTick = player.tickCount;
 		if (stepDirection == null) return;
 		if (getDoingTick() < getVaultAnimateTime()) {
 			player.setDeltaMovement(

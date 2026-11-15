@@ -117,6 +117,9 @@ public class WorldUtil {
 		double baseLine = Math.min(entity.getBbHeight() * 0.86, getWallHeight(entity));
 		double stepX = 0;
 		double stepZ = 0;
+		// Clear space needed past the entity's edge to land on the step: one block (the step's top).
+		// Was distance + 1.8 (~2.1 blocks), which refused any step with terrain/leaves right behind it.
+		final double landing = 1.0;
 		Vec3 pos = entity.position();
 
 		AABB baseBoxBottom = new AABB(
@@ -135,16 +138,16 @@ public class WorldUtil {
 				pos.y() + baseLine + entity.getBbHeight(),
 				pos.z() + d
 		);
-		if (!world.noCollision(entity, baseBoxBottom.expandTowards(distance, 0, 0)) && world.noCollision(entity, baseBoxTop.expandTowards((distance + 1.8), 0, 0))) {
+		if (!world.noCollision(entity, baseBoxBottom.expandTowards(distance, 0, 0)) && world.noCollision(entity, baseBoxTop.expandTowards(landing, 0, 0))) {
 			stepX++;
 		}
-		if (!world.noCollision(entity, baseBoxBottom.expandTowards(-distance, 0, 0)) && world.noCollision(entity, baseBoxTop.expandTowards(-(distance + 1.8), 0, 0))) {
+		if (!world.noCollision(entity, baseBoxBottom.expandTowards(-distance, 0, 0)) && world.noCollision(entity, baseBoxTop.expandTowards(-landing, 0, 0))) {
 			stepX--;
 		}
-		if (!world.noCollision(entity, baseBoxBottom.expandTowards(0, 0, distance)) && world.noCollision(entity, baseBoxTop.expandTowards(0, 0, (distance + 1.8)))) {
+		if (!world.noCollision(entity, baseBoxBottom.expandTowards(0, 0, distance)) && world.noCollision(entity, baseBoxTop.expandTowards(0, 0, landing))) {
 			stepZ++;
 		}
-		if (!world.noCollision(entity, baseBoxBottom.expandTowards(0, 0, -distance)) && world.noCollision(entity, baseBoxTop.expandTowards(0, 0, -(distance + 1.8)))) {
+		if (!world.noCollision(entity, baseBoxBottom.expandTowards(0, 0, -distance)) && world.noCollision(entity, baseBoxTop.expandTowards(0, 0, -landing))) {
 			stepZ--;
 		}
 		if (stepX == 0 && stepZ == 0) return null;
