@@ -78,7 +78,7 @@ public class FastRun extends Action {
 		return (!player.isInWater()
 				&& player.getVehicle() == null
 				&& !player.isFallFlying()
-				&& player.isSprinting()
+				&& (player.isSprinting() || parkourability.get(Vault.class).isStepChaining(player))
 				&& !player.isVisuallyCrawling()
 				&& !player.isSwimming()
 				&& !player.isShiftKeyDown()

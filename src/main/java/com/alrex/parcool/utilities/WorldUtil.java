@@ -197,6 +197,29 @@ public class WorldUtil {
 		return maxHeight;
 	}
 
+	/**
+	 * Is the 1-block step in front part of a staircase of full blocks? The next block along the step direction must be
+	 * another step, one block higher, with room to stand on both (two blocks of air above each).
+	 */
+	public static boolean isBlockStaircaseAhead(LivingEntity entity, Vec3 stepDirection) {
+		Level world = entity.level();
+		Direction forward = Direction.getApproximateNearest(stepDirection.x(), 0, stepDirection.z());
+		BlockPos step = BlockPos.containing(entity.position()).relative(forward);
+		BlockPos next = step.relative(forward).above();
+		return isSolid(world, step)
+				&& isFree(world, step.above()) && isFree(world, step.above(2))
+				&& isSolid(world, next)
+				&& isFree(world, next.above()) && isFree(world, next.above(2));
+	}
+
+	private static boolean isSolid(Level world, BlockPos pos) {
+		return !world.getBlockState(pos).getCollisionShape(world, pos).isEmpty();
+	}
+
+	private static boolean isFree(Level world, BlockPos pos) {
+		return world.getBlockState(pos).getCollisionShape(world, pos).isEmpty();
+	}
+
 	public static double getWallHeight(LivingEntity entity) {
 		Vec3 wall = getWall(entity);
 		if (wall == null) return 0;

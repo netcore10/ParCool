@@ -33,7 +33,8 @@ public class AnimatorList {
 			TapAnimator.class,
 			VerticalWallRunAnimator.class,
 			WallJumpAnimator.class,
-			WallSlideAnimator.class
+			WallSlideAnimator.class,
+			StepUpAnimator.class
 	);
 	private static final HashMap<Class<? extends Animator>, Short> INDEX_MAP;
 

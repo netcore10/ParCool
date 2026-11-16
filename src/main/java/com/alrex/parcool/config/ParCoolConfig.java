@@ -176,6 +176,10 @@ public class ParCoolConfig {
                     ConfigGroup.Other, "Enable block like rendering of zipline",
                     "enable_3d_render_zipline", true
             ),
+			QuickStepUpOnStaircases(
+					ConfigGroup.Control, "Quick step-up on block staircases (instead of vaulting each step)",
+					"quick_step_up_staircases", true
+			),
 			VaultKeyPressedNeeded(
                     ConfigGroup.Control, "Make Vault need Vault Key Pressed",
 					"vault_needs_key_pressed", false
