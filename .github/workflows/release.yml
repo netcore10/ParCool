@@ -1,0 +1,50 @@
+
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify tag belongs to 26.2
+        run: |
+          git fetch origin 26.2
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/26.2 || {
+            echo "::error::This release tag is not on the 26.2 branch."
+            exit 1
+          }
+
+      - name: Set up Java 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build mod
+        run: |
+          chmod +x gradlew
+          bash ./gradlew --no-daemon build
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ParCool ${{ github.ref_name }}
+          generate_release_notes: true
+          files: |
+            build/libs/*.jar
